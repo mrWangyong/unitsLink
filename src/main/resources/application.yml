@@ -1,0 +1,63 @@
+server:
+#  port: 8089    #jar 包用@
+  port: 8119  #本地开发用
+  context-path: /mbhyggfwpt
+spring:
+    datasource:
+        name: mbhyggfwpt
+        url: jdbc:mysql://192.168.1.100:3306/mbhyggfwpt
+        username: root
+        password: root
+        # 使用druid数据源
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        filters: stat
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
+    http:
+      multipart:
+        enabled: true
+        max-file-size: 50MB
+        max-request-size: 50MB
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#pagehelper分页插件
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+
+
+rest:
+  auth-open: true #jwt鉴权机制是否开启(true或者false)
+  sign-open: true #签名机制是否开启(true或false)
+
+jwt:
+  header: Authorization   #http请求头所需要的字段
+  secret: mySecret        #jwt秘钥
+  expiration: 604800      #7天 单位:秒
+  #过滤器不拦截的路径
+  auth-path: /kaptcha/generate,/auth/token,/user/login,/excel/*
+  md5-key: randomKey      #md5加密混淆key
+
+#staticIP: http://192.168.1.118/
+#staticIP: http://www.uwonders-my.com:9999/   #本地服务器
+staticIP: http://www.uwonders-my.com:9881/
+
+uploadfile: D:/nginx-1.8.1/html
+
+
