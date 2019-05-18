@@ -10,6 +10,7 @@ public class Constant {
 
     // 图片存入地址
     public static final String UPLOADFILE = "/home/ycxgjava/nginx/html/uwonders/ycxg/uploadfiles";
+//    public static final String UPLOADFILE = "D:\\testIMG\\uploadfiles";
 
     // 缩略图大小
     public static final String IMGSIZE = "500x500";

@@ -1,7 +1,7 @@
 server:
 #  port: 8089    #jar 包用@
   port: 8119  #本地开发用
-  context-path: /mbhyggfwpt
+  context-path: /myycxg
 spring:
     datasource:
         name: mbhyggfwpt

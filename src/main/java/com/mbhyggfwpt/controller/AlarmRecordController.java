@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/alarmRecord")
+@RequestMapping(value = "/recordAlarm")
 public class AlarmRecordController {
 
     @Resource(name = "alarmRecord")
@@ -124,7 +124,7 @@ public class AlarmRecordController {
             result.put("message", msg);
             return result;
         }
-
+        alarmRecord.setAlarmSite("众力爆破库房");
         // 添加数据
         alarmRecordService.save(alarmRecord);
 
@@ -190,8 +190,13 @@ public class AlarmRecordController {
         File file = new File(map.get("sjPath").toString());
         if (file.exists()) {
             String destpath = map.get("sjPath").toString().substring(0, map.get("sjPath").toString().lastIndexOf(".")) + "_" + Constant.IMGSIZE + alarmRecord.getImageExt();
+            System.out.println("destpath" + destpath);
             String strtemp = destpath.substring(destpath.indexOf("uploadfiles"));
-            alarmRecord.setThumbnailPath(strtemp.substring(strtemp.indexOf("\\")).replaceAll("\\\\", "/"));
+            System.out.println("strtemp" + strtemp);
+            System.out.println("11111");
+            alarmRecord.setThumbnailPath(strtemp.substring(strtemp.indexOf("/")));
+//            alarmRecord.setThumbnailPath(strtemp.substring(strtemp.indexOf("\\")).replaceAll("\\\\", "/"));
+            System.out.println("222222");
         }
     }
 

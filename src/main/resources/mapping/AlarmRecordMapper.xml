@@ -88,7 +88,7 @@
             AND alarm_type = #{alarmType }
         </if>
         <if test="alarmSite != null and alarmSite != ''">
-            AND alarm_site = #{alarmSite }
+            and alarm_site like CONCAT('%',#{alarmSite},'%')
         </if>
         order by id desc
     </select>
