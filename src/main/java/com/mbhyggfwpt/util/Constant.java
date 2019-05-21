@@ -8,6 +8,8 @@ package com.mbhyggfwpt.util;
  */
 public class Constant {
 
+    public static  String isRegister="1";
+
     // 图片存入地址
     public static final String UPLOADFILE = "/home/ycxgjava/nginx/html/uwonders/ycxg/uploadfiles";
 //    public static final String UPLOADFILE = "D:\\testIMG\\uploadfiles";

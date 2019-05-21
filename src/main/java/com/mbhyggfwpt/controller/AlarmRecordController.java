@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,9 @@ public class AlarmRecordController {
         List<Map> monthCountList = alarmRecordService.listByTimeAndGroupType(DateUtil.getFirstDayOfMonth(), DateUtil.getLastDayOfMonth());
         // 获取本周各告警类型数量
         List<Map> allCountList = alarmRecordService.listByTimeAndGroupType("", "");
+//        List<Map> allCountList = new ArrayList<>();
+
+
 
         result.put("code", "200");
         result.put("message", "请求成功");
