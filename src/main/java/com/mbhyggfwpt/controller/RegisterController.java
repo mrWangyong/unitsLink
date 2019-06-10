@@ -32,10 +32,10 @@ public class RegisterController {
         String msg = "";
         Map<String, Object> result = new HashMap<>(8);
 
-        System.out.println(map.get("keyusername"));
+        System.out.println(map.get("username"));
 
-        if (EmptyHelper.isEmpty(map.get("keyusername")) || EmptyHelper.isEmpty(map.get("keypassword"))
-                || EmptyHelper.isEmpty(map.get("keysecretKey"))) {
+        if (EmptyHelper.isEmpty(map.get("username")) || EmptyHelper.isEmpty(map.get("password"))
+                || EmptyHelper.isEmpty(map.get("secretKey"))) {
             msg = "物流中心密钥或用户名或密码不能为空!";
             result.put("msg", msg);
             result.put("code", 500);
