@@ -2,6 +2,7 @@ package com.mbhyggfwpt.service;
 
 import com.github.pagehelper.PageInfo;
 import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.XungengTime;
 
 import java.util.List;
 import java.util.Map;
@@ -51,5 +52,11 @@ public interface AlarmRecordService {
      * @return java.util.List<com.mbhyggfwpt.entity.AlarmRecord>
      **/
     PageInfo<AlarmRecord> listPageAlarmRecord(Map map);
+
+    AlarmRecord isExistXungeng(Map map);
+
+    Integer updateAlarmRecord(AlarmRecord alarmRecord);
+
+    XungengTime getXungengTime(Map map);
 
 }

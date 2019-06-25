@@ -1,6 +1,7 @@
 package com.mbhyggfwpt.mapper;
 
 import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.XungengTime;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -50,4 +51,10 @@ public interface AlarmRecordMapper {
      **/
     List<AlarmRecord> listPageAlarmRecord(Map map);
 
+    //在一段时间是否有巡更数据
+    AlarmRecord isExistXungeng(Map map);
+
+    Integer updateAlarmRecord(AlarmRecord alarmRecord);
+
+    XungengTime getXungengTime(Map map);
 }

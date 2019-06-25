@@ -1,7 +1,9 @@
 package com.mbhyggfwpt.service;
 
-import java.util.Map;
+import org.springframework.stereotype.Service;
 
+import java.util.Map;
+@Service(value = "user")
 public interface UserService {
 
     Integer isRegister(Map map);

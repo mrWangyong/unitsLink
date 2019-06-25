@@ -1,6 +1,6 @@
 server:
-#  port: 8089    #jar 包用@
-  port: 8119  #本地开发用
+#  port: 8189    #jar 包用@
+  port: 8080   #本地开发用
   context-path: /myycxg
 spring:
     datasource:
@@ -58,6 +58,12 @@ jwt:
 #staticIP: http://www.uwonders-my.com:9999/   #本地服务器
 staticIP: http://www.uwonders-my.com:9881/
 
-uploadfile: D:/nginx-1.8.1/html
+#UPLOADFILE: /home/ycxgjava/nginx/html/uwonders/ycxg/uploadfiles
+UPLOADFILE: D:\\testIMG\\uploadfiles
+
+IMGSIZE: 500x500
+
+
+
 
 

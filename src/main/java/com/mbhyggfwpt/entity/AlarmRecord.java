@@ -47,9 +47,11 @@ public class AlarmRecord {
 	// 20190124:BMP图片的存储路径
 	private String bmpimgPath;
 
-	// 20190221:产生告警的终端编号
-    private Integer alarmTerminalId;
+	private String sign;
 
+	// 20190221:产生告警的终端编号
+
+	private Integer alarmTerminalId;
     @Override
     public String toString() {
         return "AlarmRecord{" +
@@ -79,6 +81,14 @@ public class AlarmRecord {
     public Integer getAlarmTerminalId() {
         return alarmTerminalId;
     }
+
+	public String getSign() {
+		return sign;
+	}
+
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
 
     public void setAlarmTerminalId(Integer alarmTerminalId) {
         this.alarmTerminalId = alarmTerminalId;

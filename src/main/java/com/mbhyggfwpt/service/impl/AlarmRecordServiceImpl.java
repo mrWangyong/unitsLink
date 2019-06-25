@@ -3,6 +3,7 @@ package com.mbhyggfwpt.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.XungengTime;
 import com.mbhyggfwpt.mapper.AlarmRecordMapper;
 import com.mbhyggfwpt.service.AlarmRecordService;
 import com.sun.javafx.logging.PulseLogger;
@@ -76,4 +77,18 @@ public class AlarmRecordServiceImpl implements AlarmRecordService {
         return pageInfo;
     }
 
+    @Override
+    public AlarmRecord isExistXungeng(Map map){
+        return alarmRecordMapper.isExistXungeng(map);
+    }
+
+    @Override
+    public Integer updateAlarmRecord(AlarmRecord alarmRecord){
+        return alarmRecordMapper.updateAlarmRecord(alarmRecord);
+    }
+
+    @Override
+    public XungengTime getXungengTime(Map map){
+        return alarmRecordMapper.getXungengTime(map);
+    }
 }

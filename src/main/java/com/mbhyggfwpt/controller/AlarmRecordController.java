@@ -2,6 +2,7 @@ package com.mbhyggfwpt.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.XungengTime;
 import com.mbhyggfwpt.service.AlarmRecordService;
 import com.mbhyggfwpt.util.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,10 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author chenglei
@@ -29,6 +28,10 @@ public class AlarmRecordController {
     private AlarmRecordService alarmRecordService;
     @Value("${staticIP}")
     private String staticIP;
+    @Value("${UPLOADFILE}")
+    private String UPLOADFILE;
+    @Value("${IMGSIZE}")
+    private String IMGSIZE;
 
     /**
      * @description 返回数据列表
@@ -110,29 +113,32 @@ public class AlarmRecordController {
         // 验证基础参数
         String msg = this.verificationParm(alarmRecord);
         if (EmptyHelper.isNotEmpty(msg)) {
-            result.put("code", "500");
+            result.put("code", 500);
             result.put("message", msg);
             return result;
         }
 
-        // 保存图片
+//         保存图片
         if (EmptyHelper.isNotEmpty(alarmRecord.getBase64())) {
             saveImg(alarmRecord);
         }
 
-        // 验证重复数据
+//         验证重复数据
         Map<String,Object> repeatVer = this.verificationRepeatAlarmRecord(alarmRecord);
         msg = repeatVer.get("msg").toString();
         if(EmptyHelper.isNotEmpty(msg)){
-            result.put("code", "500");
+            result.put("code", 500);
             result.put("message", msg);
             return result;
         }
         alarmRecord.setAlarmSite("众力爆破库房");
-        // 添加数据
-        alarmRecordService.save(alarmRecord);
-
-        result.put("code", "200");
+        //如果是巡更类型
+        if("巡更信息".equals(alarmRecord.getAlarmType())){
+            dealXungeng(alarmRecord);
+        }else{
+            alarmRecordService.save(alarmRecord);
+        }
+        result.put("code", 200);
         result.put("message", "告警数据添加成功");
         result.put("id", alarmRecord.getId());
         return result;
@@ -187,18 +193,19 @@ public class AlarmRecordController {
      */
     private void saveImg(AlarmRecord alarmRecord){
         Base64topic base64topic = new Base64topic();
-        Map<String, Object> map = base64topic.encodeBase64(alarmRecord.getBase64(), Constant.UPLOADFILE, alarmRecord.getImageExt());
+        Map<String, Object> map = base64topic.encodeBase64(alarmRecord.getBase64(), UPLOADFILE, alarmRecord.getImageExt());
         alarmRecord.setImgPath(map.get("filePath").toString());
         alarmRecord.setImageName(map.get("fileName").toString());
         // 生成缩略图
         File file = new File(map.get("sjPath").toString());
         if (file.exists()) {
-            String destpath = map.get("sjPath").toString().substring(0, map.get("sjPath").toString().lastIndexOf(".")) + "_" + Constant.IMGSIZE + alarmRecord.getImageExt();
+            String destpath = map.get("sjPath").toString().
+                    substring(0, map.get("sjPath").toString().lastIndexOf(".")) + "_" + IMGSIZE + alarmRecord.getImageExt();
             System.out.println("destpath" + destpath);
             String strtemp = destpath.substring(destpath.indexOf("uploadfiles"));
             System.out.println("strtemp" + strtemp);
             System.out.println("11111");
-            alarmRecord.setThumbnailPath(strtemp.substring(strtemp.indexOf("/")));
+            alarmRecord.setThumbnailPath(strtemp.substring(strtemp.indexOf(File.separator)));
 //            alarmRecord.setThumbnailPath(strtemp.substring(strtemp.indexOf("\\")).replaceAll("\\\\", "/"));
             System.out.println("222222");
         }
@@ -236,4 +243,46 @@ public class AlarmRecordController {
         return map;
     }
 
+    //取当前时间日期
+    public static String getCurrtDay() {
+        //使用Date创建日期对象
+        Date date=new Date();
+        System.out.println("当前的日期是------>"+date);
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println("格式化后的时间------->"+format.format(date));
+        return format.format(date);
+    }
+
+
+    //处理巡更信息
+    public void dealXungeng(AlarmRecord alarmRecord){
+        String currentTime = alarmRecord.getAlarmTime().split(" ")[1];
+        Map<String , Object> parTimeMap = new HashMap<>(Const.MAPINITSIZE);
+        parTimeMap.put("currentTime",currentTime);
+        XungengTime xungengTimeSql = alarmRecordService.getXungengTime(parTimeMap);
+        if(xungengTimeSql == null){
+            //不在设定的巡更时间段
+        }else{
+            String startTime = getCurrtDay()+" "+xungengTimeSql.getStartTime();
+            String endTime = getCurrtDay()+" "+xungengTimeSql.getEndTime();
+            Map<String , Object> parMap = new HashMap<>(Const.MAPINITSIZE);
+            parMap.put("startTime",startTime);
+            parMap.put("endTime",endTime);
+            parMap.put("alarmType","巡更信息");
+            AlarmRecord alarmRecordSql = alarmRecordService.isExistXungeng(parMap);
+            if(alarmRecordSql == null){
+                //如果当前时间段没有巡更信息，添加一条数据
+                alarmRecord.setDepName(alarmRecord.getAlarmMsg());
+                alarmRecord.setDepBianma(alarmRecord.getAlarmTime());
+                alarmRecordService.save(alarmRecord);
+            }else{
+                //如果当前时间段有巡更信息，编辑当条数据，往depName字段追加巡更地点(临时用)
+                String xungengSite = alarmRecordSql.getDepName()+"&&"+alarmRecord.getAlarmMsg();
+                alarmRecordSql.setDepName(xungengSite);
+                String xungengTime = alarmRecordSql.getDepBianma()+"&&"+alarmRecord.getAlarmTime();
+                alarmRecordSql.setDepBianma(xungengTime);
+                alarmRecordService.updateAlarmRecord(alarmRecordSql);
+            }
+        }
+    }
 }

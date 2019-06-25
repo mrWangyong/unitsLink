@@ -8,7 +8,9 @@
 
 	<sql id="Field">
 			id, terminal_id, img_path, alarm_msg, alarm_time, alarm_site, alarm_type, alarm_category,typecode,thumbnailPath,
-        status, remark, image_md5, image_size, image_name, image_ext, area_sign, dealstatus, dealrole, addId, addName, aqjcId, aqjcDetailIds,processId,taskId,depId,depBianma,depName,bmpimg_path,alarm_terminal_id
+        status, remark, image_md5, image_size, image_name, image_ext, area_sign,
+        dealstatus, dealrole, addId, addName, aqjcId, aqjcDetailIds,processId,taskId,depId,
+        depBianma,depName,bmpimg_path,alarm_terminal_id
 	</sql>
 
     <resultMap id="baseResultMap" type="com.mbhyggfwpt.entity.AlarmRecord" >
@@ -74,7 +76,8 @@
 
     <!-- 根据条件查询告警列表数据 -->
     <select id="listPageAlarmRecord" parameterType="map" resultMap="baseResultMap">
-        select id, terminal_id, CONCAT(#{staticIP}, img_path) as img_path, alarm_msg, alarm_time, alarm_site, alarm_type, alarm_category, dealstatus
+        select id, terminal_id, CONCAT(#{staticIP}, img_path) as img_path, alarm_msg,
+        alarm_time, alarm_site, alarm_type, alarm_category, dealstatus
         , dealRole, depId, depBianma, depName, CONCAT(#{staticIP}, thumbnailPath) as thumbnailPath
         from <include refid="tableName"></include>
         where 1=1
@@ -102,12 +105,62 @@
         )
         values (#{id,jdbcType=BIGINT}, #{terminalId,jdbcType=BIGINT}, #{imgPath,jdbcType=VARCHAR},
         #{alarmMsg,jdbcType=VARCHAR}, #{alarmTime,jdbcType=TIMESTAMP},#{alarmSite,jdbcType=VARCHAR},
-        #{alarmType,jdbcType=VARCHAR}, #{alarmCategory,jdbcType=VARCHAR}, #{typecode,jdbcType=VARCHAR}, #{thumbnailPath,jdbcType=VARCHAR},
+        #{alarmType,jdbcType=VARCHAR}, #{alarmCategory,jdbcType=VARCHAR}, #{typecode,jdbcType=VARCHAR},
+        #{thumbnailPath,jdbcType=VARCHAR},
         #{status,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},#{imageMd5,jdbcType=VARCHAR}, #{imageSize,jdbcType=INTEGER},
         #{imageName,jdbcType=VARCHAR}, #{imageExt,jdbcType=VARCHAR}, #{area_sign,jdbcType=VARCHAR},
         #{dealStatus,jdbcType=VARCHAR}, #{dealRole,jdbcType=VARCHAR}, #{addId,jdbcType=VARCHAR},
         #{addName,jdbcType=VARCHAR}, #{aqjcId,jdbcType=BIGINT}, #{aqjcDetailIds,jdbcType=VARCHAR},
-        #{processId,jdbcType=VARCHAR},#{taskId,jdbcType=VARCHAR},#{depId,jdbcType=VARCHAR},#{depBianma,jdbcType=VARCHAR},#{depName,jdbcType=VARCHAR}, #{bmpimgPath,jdbcType=VARCHAR}, #{alarmTerminalId,jdbcType=VARCHAR})
+        #{processId,jdbcType=VARCHAR},#{taskId,jdbcType=VARCHAR},#{depId,jdbcType=VARCHAR},
+        #{depBianma,jdbcType=VARCHAR},#{depName,jdbcType=VARCHAR},
+        #{bmpimgPath,jdbcType=VARCHAR}, #{alarmTerminalId,jdbcType=VARCHAR})
     </insert>
+
+    <!-- 在一段时间是否有巡更数据 -->
+    <select id="isExistXungeng" parameterType="map" resultMap="baseResultMap">
+        select id, terminal_id, CONCAT(#{staticIP}, img_path) as img_path, alarm_msg,
+        alarm_time, alarm_site, alarm_type, alarm_category, dealstatus
+        , dealRole, depId, depBianma, depName, CONCAT(#{staticIP}, thumbnailPath) as thumbnailPath
+        from <include refid="tableName"></include>
+        where 1=1
+        <if test="startTime !=null and startTime != ''">
+            AND alarm_time &gt;= #{startTime }
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND alarm_time &lt;= #{endTime }
+        </if>
+        <if test="alarmType != null and alarmType != ''">
+            AND alarm_type = #{alarmType }
+        </if>
+        order by id desc
+    </select>
+
+    <!--修改巡更时间和地点-->
+    <update id="updateAlarmRecord"  parameterType="com.mbhyggfwpt.entity.AlarmRecord" >
+        update
+        <include refid="tableName"></include>
+        <set>
+            <if test="depName != null" >
+                depName = #{depName,jdbcType=VARCHAR},
+            </if>
+            <if test="depBianma != null" >
+                depBianma = #{depBianma,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 在一段时间是否有巡更数据 -->
+    <select id="getXungengTime" parameterType="map" resultType="com.mbhyggfwpt.entity.XungengTime">
+        select id, startTime, endTime
+        from xungengTime
+        where 1=1
+        <if test="currentTime !=null and currentTime != ''">
+            AND #{currentTime} >= startTime
+        </if>
+        <if test="currentTime != null and currentTime != ''">
+            AND endTime >= #{currentTime}
+        </if>
+    </select>
 
 </mapper>

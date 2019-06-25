@@ -15,8 +15,9 @@
 
   <!--注册-->
   <insert id="register" parameterType="map" >
-    insert into user (username, password,serialNum,secretKey)
-    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{serialNum,jdbcType=VARCHAR}, #{secretKey,jdbcType=VARCHAR})
+    insert into user (username, password,serialNum,secretKey,terminalType)
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{serialNum,jdbcType=VARCHAR}
+    , #{secretKey,jdbcType=VARCHAR}, #{terminalType,jdbcType=VARCHAR})
   </insert>
 
   <!--判断用户名是否存在-->

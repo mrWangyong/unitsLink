@@ -57,6 +57,10 @@ public class RegisterController {
         userMap.put("password",map.get("password"));
         userMap.put("serialNum",map.get("serialNum"));
 
+        if(map.containsKey("terminalType")){
+            userMap.put("terminalType",map.get("terminalType"));
+        }
+
         int isRegister = userService.isRegister(userMap);
         if(isRegister >= 1){
             msg = "用户名已经存在或者序列号重复";
@@ -98,7 +102,7 @@ public class RegisterController {
         System.out.println("password="+map.get("password"));
         System.out.println("password="+map.get("password"));
 
-        if(null == (map.get("username")) && null == (map.get("password"))){
+        if("" == (map.get("username")) && "" == (map.get("password"))){
             int isRegister = userService.isRegister(userMap);
             if(isRegister == 1){
                 result.put("code", 200);
