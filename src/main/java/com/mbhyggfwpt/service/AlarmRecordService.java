@@ -2,6 +2,7 @@ package com.mbhyggfwpt.service;
 
 import com.github.pagehelper.PageInfo;
 import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.PatrolConfig;
 import com.mbhyggfwpt.entity.XungengTime;
 
 import java.util.List;
@@ -58,5 +59,9 @@ public interface AlarmRecordService {
     Integer updateAlarmRecord(AlarmRecord alarmRecord);
 
     XungengTime getXungengTime(Map map);
+
+    Integer updateWorkTypeSingle(Map map);
+
+    List<PatrolConfig> findPatrolList(Map map);
 
 }

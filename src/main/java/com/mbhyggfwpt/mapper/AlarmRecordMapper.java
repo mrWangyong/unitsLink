@@ -1,6 +1,7 @@
 package com.mbhyggfwpt.mapper;
 
 import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.PatrolConfig;
 import com.mbhyggfwpt.entity.XungengTime;
 import org.apache.ibatis.annotations.Param;
 
@@ -57,4 +58,8 @@ public interface AlarmRecordMapper {
     Integer updateAlarmRecord(AlarmRecord alarmRecord);
 
     XungengTime getXungengTime(Map map);
+
+    Integer updateWorkTypeSingle(Map map);
+
+    List<PatrolConfig> findPatrolList(Map map);
 }

@@ -132,12 +132,15 @@ public class AlarmRecordController {
             return result;
         }
         alarmRecord.setAlarmSite("众力爆破库房");
+
+        alarmRecordService.save(alarmRecord);
+
         //如果是巡更类型
-        if("巡更信息".equals(alarmRecord.getAlarmType())){
-            dealXungeng(alarmRecord);
-        }else{
-            alarmRecordService.save(alarmRecord);
-        }
+//        if("巡更信息".equals(alarmRecord.getAlarmType())){
+//            dealXungeng(alarmRecord);
+//        }else{
+//            alarmRecordService.save(alarmRecord);
+//        }
         result.put("code", 200);
         result.put("message", "告警数据添加成功");
         result.put("id", alarmRecord.getId());

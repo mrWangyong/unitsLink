@@ -1,14 +1,19 @@
 package com.mbhyggfwpt.controller;
 
+import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.User;
 import com.mbhyggfwpt.service.AlarmRecordService;
 import com.mbhyggfwpt.service.UserService;
 import com.mbhyggfwpt.util.Constant;
 import com.mbhyggfwpt.util.EmptyHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +30,8 @@ public class RegisterController {
 
     @Resource(name = "user")
     private UserService userService;
+    @Resource(name = "alarmRecord")
+    private AlarmRecordService alarmRecordService;
 
     /**
      * 35.用户注册
@@ -124,4 +131,70 @@ public class RegisterController {
         return result;
     }
 
+    /**
+     * 终端心跳检测
+     * @param map
+     * @return
+     */
+    @RequestMapping(value="/heartTest")
+    @ResponseBody
+    public Map<String, Object> heartTest(@RequestBody Map<String,Object> map) {
+        Map<String, Object> result = new HashMap<>(8);
+        String msg = "";
+        try {
+            if (EmptyHelper.isEmpty(map.get("serialNum"))) {
+                msg = "serialNum不能为空！";
+                result.put("msg",msg);
+                result.put("code",500);
+                return result;
+            }else {
+                User user = userService.getUserBySerialnum(map);
+                if(user != null){
+                    if(user.getStatus().equals("0")){
+                        String dateFormatPar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                        AlarmRecord alarmRecord = new AlarmRecord();
+                        alarmRecord.setAlarmType("设备连接异常预警");
+                        alarmRecord.setAlarmSite("众力爆破库房");
+                        alarmRecord.setAlarmTime(dateFormatPar);
+                        alarmRecord.setAlarmMsg("视频服务器重新连接");
+                        alarmRecordService.save(alarmRecord);
+                    }
+                }
+
+            }
+            if (EmptyHelper.isEmpty(map.get("lastOnlineTime"))) {
+                msg = "lastOnlineTime不能为空！";
+                result.put("msg",msg);
+                result.put("code",500);
+                return result;
+            }
+            try {
+                map.put("status","1");
+                map.put("lastOnlineTime",System.currentTimeMillis());
+                Integer count = userService.updateUser(map);
+                msg = "心跳发送成功";
+                // 如果影响行数为0，则返回未更新提示
+                if (0 == count) {
+                    msg = "未找到该序列号对应的数据";
+                    result.put("msg",msg);
+                    result.put("code",200);
+                    return result;
+                }
+                result.put("msg",msg);
+                result.put("code",200);
+                return result;
+            } catch (Exception e) {
+                msg = "更新出错:" + e.getMessage();
+                msg = "未找到该序列号对应的数据";
+                result.put("msg",msg);
+                result.put("code",500);
+            }
+            return result;
+        } catch (Exception e) {
+            msg = "接口内部出错:" + e.getMessage();
+            result.put("msg",msg);
+            result.put("code",500);
+            return result;
+        }
+    }
 }

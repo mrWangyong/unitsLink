@@ -3,11 +3,13 @@ package com.mbhyggfwpt.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbhyggfwpt.entity.AlarmRecord;
+import com.mbhyggfwpt.entity.PatrolConfig;
 import com.mbhyggfwpt.entity.XungengTime;
 import com.mbhyggfwpt.mapper.AlarmRecordMapper;
 import com.mbhyggfwpt.service.AlarmRecordService;
 import com.sun.javafx.logging.PulseLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,8 @@ public class AlarmRecordServiceImpl implements AlarmRecordService {
 
     @Autowired
     private AlarmRecordMapper alarmRecordMapper;
+
+
 
     /**
      * @description 根据传入的时间，查询该时间段各告警类型的数量
@@ -90,5 +94,15 @@ public class AlarmRecordServiceImpl implements AlarmRecordService {
     @Override
     public XungengTime getXungengTime(Map map){
         return alarmRecordMapper.getXungengTime(map);
+    }
+
+    @Override
+    public Integer updateWorkTypeSingle(Map map){
+        return  alarmRecordMapper.updateWorkTypeSingle(map);
+    }
+
+    @Override
+    public List<PatrolConfig> findPatrolList(Map map){
+        return  alarmRecordMapper.findPatrolList(map);
     }
 }

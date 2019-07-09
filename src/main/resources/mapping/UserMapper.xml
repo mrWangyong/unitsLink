@@ -27,4 +27,29 @@
     where serialNum = #{serialNum,jdbcType=VARCHAR}
   </select>
 
+  <!--判断-->
+  <select id="getUserBySerialnum" parameterType="map"  resultType="com.mbhyggfwpt.entity.User">
+    select *
+    from user
+    where serialNum = #{serialNum,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 更新终端最后在线时间 -->
+  <update id="updateUser" parameterType="map">
+    update user
+    set
+    <if test="lastOnlineTime != null" >
+        lastOnlineTime = #{lastOnlineTime,jdbcType=VARCHAR},
+    </if>
+    <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR}
+    </if>
+    where serialNum 	= #{serialNum,jdbcType=VARCHAR}
+  </update>
+
+  <!--获取所有用户-->
+  <select id="getUserList" parameterType="map"  resultType="com.mbhyggfwpt.entity.User">
+    select * from user
+  </select>
+
 </mapper>

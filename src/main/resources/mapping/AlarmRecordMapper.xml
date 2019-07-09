@@ -43,6 +43,19 @@
         <result column="alarm_terminal_id" property="alarmTerminalId" jdbcType="VARCHAR" />
     </resultMap>
 
+
+    <resultMap id="resultMap" type="com.mbhyggfwpt.entity.PatrolConfig" >
+        <id column="configId" property="configId" jdbcType="BIGINT" />
+        <result column="userId" property="userId" jdbcType="VARCHAR" />
+        <result column="userName" property="userName" jdbcType="VARCHAR" />
+        <result column="startDate" property="startDate" jdbcType="VARCHAR" />
+        <result column="endDate" property="endDate" jdbcType="VARCHAR" />
+        <result column="cameraIp" property="cameraIp" jdbcType="VARCHAR" />
+        <result column="cameraSite" property="cameraSite" jdbcType="VARCHAR" />
+        <collection property="featureList" select="ArFeaturMapper.findFeatureByUserId"
+                    column="{userId=userId,imgdirPath = imgdirPath}" />
+    </resultMap>
+
     <!-- 根据传入的时间，查询该时间段各告警类型的数量 -->
     <select id="listByTimeAndGroupType" resultType="map">
         SELECT alarm_type as alarmType,count(*) as alarmCount
@@ -161,6 +174,19 @@
         <if test="currentTime != null and currentTime != ''">
             AND endTime >= #{currentTime}
         </if>
+    </select>
+
+
+    <!--更新巡更摄像头-->
+    <update id="updateWorkTypeSingle" parameterType="map">
+        UPDATE cameraInfo  set workType=#{workType} where cip = #{ip}
+    </update>
+
+
+    <!--获取巡更配置-->
+    <select id="findPatrolList" parameterType="map" resultType="com.mbhyggfwpt.entity.PatrolConfig">
+        SELECT *
+        from patrolconfig
     </select>
 
 </mapper>
