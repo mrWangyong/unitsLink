@@ -8,10 +8,10 @@
 		<version>1.5.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.mbhyggfwpt</groupId>
-	<artifactId>mbhyggfwpt</artifactId>
+	<groupId>com.unitsLink</groupId>
+	<artifactId>unitsLink</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mbhyggfwpt</name>
+	<name>unitsLink</name>
 	<description>mbhy</description>
 
     <properties>

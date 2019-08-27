@@ -1,10 +1,10 @@
 server:
   port: 8189    #jar 包用@
 #  port: 8080   #本地开发用
-  context-path: /myycxg
+  context-path: /unitsLink
 spring:
     datasource:
-        name: mbhyggfwpt
+        name: unitsLink
         url: jdbc:mysql://192.168.1.100:3306/mbhyggfwpt
         username: root
         password: root
