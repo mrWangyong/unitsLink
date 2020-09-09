@@ -27,7 +27,7 @@
         <springfox.version>2.5.0</springfox.version>
         <fastjson.version>1.2.28</fastjson.version>
         <okhttp.version>3.4.1</okhttp.version>
-        <validator.version>5.2.4.Final</validator.version>
+        <validator.version>5.3.6.Final</validator.version>
         <ehcache-core.version>2.6.11</ehcache-core.version>
         <zxing.version>3.2.0</zxing.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
